@@ -1,10 +1,8 @@
 import logging
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from redis import exceptions as redis_exceptions
-
 from app.api.v1.routes import router as v1_router
 from app.config import Config, load_config
 from app.logging import setup_logging
@@ -29,7 +27,6 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title=cfg.app.name, lifespan=lifespan)
-
 default_rule = Rule(limit=cfg.app.default_limit, window_seconds=cfg.app.default_window_minutes * 60)
 
 
@@ -48,6 +45,7 @@ async def health():
 
 
 app.include_router(v1_router)
+
 
 
 
