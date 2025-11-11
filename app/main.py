@@ -29,6 +29,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title=cfg.app.name, lifespan=lifespan)
 default_rule = Rule(limit=cfg.app.default_limit, window_seconds=cfg.app.default_window_minutes * 60)
 
+app.state.default_rule = default_rule
 
 @app.get("/health")
 async def health():

@@ -4,6 +4,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from redis import exceptions as redis_exceptions
+from starlette.requests import Request
 
 from app.models.schemas import (
     CreateRuleRequest,
@@ -18,11 +19,12 @@ logger = logging.getLogger("api")
 router = APIRouter(prefix="/api/v1/rate-limit", tags=["rate-limit"])
 
 
-def get_service() -> RateLimiterService:
+def get_service(request: Request) -> RateLimiterService:
     redis = get_redis_instance()
     if not redis:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Redis unavailable")
-    return RateLimiterService(redis=redis, default_rule=Rule(limit=100, window_seconds=3600))
+    default_rule = request.app.state.default_rule
+    return RateLimiterService(redis=redis, default_rule=default_rule)
 
 
 @router.post("/check", response_model=RateLimitCheckResponse)
