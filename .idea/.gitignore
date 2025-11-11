@@ -15,12 +15,3 @@ __pycache__/
 venv/
 .env/
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Virtual environments
-venv/
-.env/
